@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📍 深圳城市无障碍地图</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- ============================================================
+       腾讯地图 GL JS · 双模式加载
+       模式A(WorkBuddy 预览):经本地代理转发密钥,前端零密钥;
+       模式B(自行部署,如 GitHub Pages):请前往腾讯位置服务开放平台
+       (https://lbs.qq.com) 控制台创建应用并申请 Key(JS API GL),
+       替换下方 TMAP_KEY 占位符,并在控制台为该 Key 配置
+       部署域名的白名单。
+       ============================================================ -->
+  <script>
+    window.TMAP_KEY = "Please apply for your own key at the Tencent Location Service Open Platform and replace this placeholder";
+    (function () {
+      var useProxy = window.TMAP_KEY.indexOf('Please apply') === 0;
+      if (useProxy) {
+        // 代理模式:SDK 请求经 WorkBuddy 本地代理转发,密钥不落前端
+        window._TMapSecurityConfig = {
+          serviceHost: 'http://127.0.0.1:__WB_HTTP_PORT__/_TMapService/_wbt/__WB_TMAP_SECRET__'
+        };
+      }
+      var s = document.createElement('script');
+      s.src = 'https://map.qq.com/api/gljs?v=1.exp' + (useProxy ? '' : '&key=' + encodeURIComponent(window.TMAP_KEY));
+      s.onload = function () {
+        if (window.initAccessibilityMap) window.initAccessibilityMap();
+      };
+      s.onerror = function () {
+        document.getElementById('map-error').style.display = 'flex';
+      };
+      document.head.appendChild(s);
+    })();
+  </script>
+</head>
+<body>
+  <!-- 全屏地图 -->
+  <div id="map-container" role="application" aria-label="深圳城市无障碍地图"></div>
+
+  <!-- 左上角悬浮面板组 -->
+  <div class="panel-stack">
+    <!-- 标题卡片 -->
+    <header class="card title-card">
+      <h1>📍 深圳城市无障碍地图</h1>
+      <div class="sub">
+        <span><b>18</b> 医院</span><span class="dot-sep"></span>
+        <span><b>2</b> 大学</span><span class="dot-sep"></span>
+        <span><b>95</b> 酒店</span><span class="dot-sep"></span>
+        <span><b>5</b> 商场</span><span class="dot-sep"></span>
+        <span><b>10</b> 公园</span><span class="dot-sep"></span>
+        <span><b>9</b> 博物馆</span><span class="dot-sep"></span>
+        <span><b>7</b> 图书馆</span>
+      </div>
+      <div class="sub" style="margin-top:3px">无障碍环境建设测评 · 共 <b>146</b> 个点位</div>
+    </header>
+
+    <!-- 搜索 -->
+    <div class="card search-card">
+      <div class="search-box">
+        <svg width="15" height="15" viewBox="0 0 15 15"><circle cx="6.5" cy="6.5" r="5" fill="none" stroke="#4b5563" stroke-width="1.6"/><path d="M10.5 10.5 14 14" stroke="#4b5563" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="search-input" type="text" placeholder="搜索地点名称,如:北京大学深圳医院" autocomplete="off" aria-label="搜索地点">
+        <button id="search-clear" class="search-clear" aria-label="清空搜索">✕</button>
+      </div>
+      <div id="search-results" class="search-results"></div>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="card filter-card">
+      <div class="filter-group">
+        <div class="filter-label">类别分布</div>
+        <div class="chips" data-filter="category">
+          <button class="chip active" data-value="全部">全部</button>
+          <button class="chip" data-value="医院"><span class="chip-dot" style="background:#e2554d"></span>医院</button>
+          <button class="chip" data-value="大学"><span class="chip-dot" style="background:#2f80ed"></span>大学</button>
+          <button class="chip" data-value="酒店"><span class="chip-dot" style="background:#9333ea"></span>酒店</button>
+          <button class="chip" data-value="商场"><span class="chip-dot" style="background:#ea8a0c"></span>商场</button>
+          <button class="chip" data-value="公园"><span class="chip-dot" style="background:#16a34a"></span>公园</button>
+          <button class="chip" data-value="博物馆"><span class="chip-dot" style="background:#0891b2"></span>博物馆</button>
+          <button class="chip" data-value="图书馆"><span class="chip-dot" style="background:#b45309"></span>图书馆</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">无障碍表现</div>
+        <div class="chips" data-filter="tier">
+          <button class="chip active" data-value="全部">全部</button>
+          <button class="chip" data-value="优秀"><span class="chip-dot" style="background:#059669"></span>优秀</button>
+          <button class="chip" data-value="良好"><span class="chip-dot" style="background:#65a30d"></span>良好</button>
+          <button class="chip" data-value="一般"><span class="chip-dot" style="background:#d97706"></span>一般</button>
+          <button class="chip" data-value="待改善"><span class="chip-dot" style="background:#dc2626"></span>待改善</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">照片情况</div>
+        <div class="chips" data-filter="photo">
+          <button class="chip active" data-value="全部">全部</button>
+          <button class="chip" data-value="有照片">有照片</button>
+          <button class="chip" data-value="无照片">无照片</button>
+        </div>
+      </div>
+      <div class="filter-count">当前显示 <b id="filter-count-num">130</b> / 130 个测评点</div>
+    </div>
+
+    <!-- 缩放控制(左上角) -->
+    <div class="zoom-control" role="group" aria-label="地图缩放">
+      <button id="zoom-in" class="zoom-btn" aria-label="放大">＋</button>
+      <button id="zoom-out" class="zoom-btn" aria-label="缩小">－</button>
+    </div>
+  </div>
+
+  <!-- 右下角图例 -->
+  <aside class="card legend" aria-label="图例">
+    <div class="legend-title">图例 LEGEND</div>
+    <div class="legend-row">
+      <svg class="legend-pin" viewBox="0 0 34 44"><path d="M17 1C8.2 1 1 8.2 1 17c0 11.6 14.2 24.6 15.3 25.5a1.2 1.2 0 0 0 1.4 0C18.8 41.6 33 28.6 33 17 33 8.2 25.8 1 17 1z" fill="#e2554d" stroke="#fff" stroke-width="1.6"/><circle cx="17" cy="15.5" r="8.6" fill="#fff"/><path d="M15.2 10.6h3.6v3.2h3.2v3.6h-3.2v3.2h-3.6v-3.2h-3.2v-3.6h3.2z" fill="#e2554d"/></svg>
+      <span>医院(18)</span>
+    </div>
+    <div class="legend-row">
+      <svg class="legend-pin" viewBox="0 0 34 44"><path d="M17 1C8.2 1 1 8.2 1 17c0 11.6 14.2 24.6 15.3 25.5a1.2 1.2 0 0 0 1.4 0C18.8 41.6 33 28.6 33 17 33 8.2 25.8 1 17 1z" fill="#2f80ed" stroke="#fff" stroke-width="1.6"/><circle cx="17" cy="15.5" r="8.6" fill="#fff"/><path d="M17 10l7.4 3.4L17 16.8l-7.4-3.4z" fill="#2f80ed"/><path d="M13.1 15.7v3c0 1.3 1.75 2.3 3.9 2.3s3.9-1 3.9-2.3v-3L17 17.5z" fill="#2f80ed"/></svg>
+      <span>大学(2)</span>
+    </div>
+    <div class="legend-row">
+      <svg class="legend-pin" viewBox="0 0 34 44"><path d="M17 1C8.2 1 1 8.2 1 17c0 11.6 14.2 24.6 15.3 25.5a1.2 1.2 0 0 0 1.4 0C18.8 41.6 33 28.6 33 17 33 8.2 25.8 1 17 1z" fill="#9333ea" stroke="#fff" stroke-width="1.6"/><circle cx="17" cy="15.5" r="8.6" fill="#fff"/><path fill-rule="evenodd" fill="#9333ea" d="M12.1 9.6h9.8v11.3h-9.8zM13.9 11.2h1.5v1.5h-1.5zM15.8 11.2h1.5v1.5h-1.5zM17.7 11.2h1.5v1.5h-1.5zM13.9 13.3h1.5v1.5h-1.5zM15.8 13.3h1.5v1.5h-1.5zM17.7 13.3h1.5v1.5h-1.5zM16.1 17.4h1.9v3.5h-1.9z"/></svg>
+      <span>酒店(95)</span>
+    </div>
+    <div class="legend-row">
+      <svg class="legend-pin" viewBox="0 0 34 44"><path d="M17 1C8.2 1 1 8.2 1 17c0 11.6 14.2 24.6 15.3 25.5a1.2 1.2 0 0 0 1.4 0C18.8 41.6 33 28.6 33 17 33 8.2 25.8 1 17 1z" fill="#ea8a0c" stroke="#fff" stroke-width="1.6"/><circle cx="17" cy="15.5" r="8.6" fill="#fff"/><path fill="#ea8a0c" d="M13 13.4h8l-.8 7.4h-6.4z"/><path fill="#ea8a0c" d="M14.7 13.4v-1.8a2.3 2.3 0 0 1 4.6 0v1.8h-1.4v-1.8a0.9 0.9 0 0 0-1.8 0v1.8z"/></svg>
+      <span>商场(5)</span>
+    </div>
+    <div class="legend-row">
+      <svg class="legend-pin" viewBox="0 0 34 44"><path d="M17 1C8.2 1 1 8.2 1 17c0 11.6 14.2 24.6 15.3 25.5a1.2 1.2 0 0 0 1.4 0C18.8 41.6 33 28.6 33 17 33 8.2 25.8 1 17 1z" fill="#16a34a" stroke="#fff" stroke-width="1.6"/><circle cx="17" cy="15.5" r="8.6" fill="#fff"/><path fill="#16a34a" d="M17 9.1l4 5.9h-2.3l2.9 3.7h-9.2l2.9-3.7h-2.3z"/><path fill="#16a34a" d="M16.2 18.7h1.6v2.4h-1.6z"/></svg>
+      <span>公园(10)</span>
+    </div>
+    <div class="legend-row">
+      <svg class="legend-pin" viewBox="0 0 34 44"><path d="M17 1C8.2 1 1 8.2 1 17c0 11.6 14.2 24.6 15.3 25.5a1.2 1.2 0 0 0 1.4 0C18.8 41.6 33 28.6 33 17 33 8.2 25.8 1 17 1z" fill="#0891b2" stroke="#fff" stroke-width="1.6"/><circle cx="17" cy="15.5" r="8.6" fill="#fff"/><path fill="#0891b2" d="M13 13h8v7h-8z"/><path fill="#0891b2" d="M13 11h8v2h-8zM14.5 8h5v3h-5z"/><path fill="#0891b2" d="M12.5 20h2.5v-3h-2.5zM19 20h2.5v-3H19zM15.5 18h3v-2h-3z"/></svg>
+      <span>博物馆(9)</span>
+    </div>
+    <div class="legend-row">
+      <svg class="legend-pin" viewBox="0 0 34 44"><path d="M17 1C8.2 1 1 8.2 1 17c0 11.6 14.2 24.6 15.3 25.5a1.2 1.2 0 0 0 1.4 0C18.8 41.6 33 28.6 33 17 33 8.2 25.8 1 17 1z" fill="#b45309" stroke="#fff" stroke-width="1.6"/><circle cx="17" cy="15.5" r="8.6" fill="#fff"/><path fill="#b45309" d="M10 13.5l7-1 0.2 1.6-7 1zM9.8 15.5l7.2-1 0.2 1.6-7.2 1z"/><path fill="#b45309" d="M17 7.5v11h-7v-11zM13 10v-1h2v1zM13 12v-1h2v1z"/></svg>
+      <span>图书馆(7)</span>
+    </div>
+    <div class="legend-sep"></div>
+    <div class="legend-row"><span class="legend-dot" style="background:#059669"></span><span>优秀 ≥85 分</span></div>
+    <div class="legend-row"><span class="legend-dot" style="background:#65a30d"></span><span>良好 70–84 分</span></div>
+    <div class="legend-row"><span class="legend-dot" style="background:#d97706"></span><span>一般 55–69 分</span></div>
+    <div class="legend-row"><span class="legend-dot" style="background:#dc2626"></span><span>待改善 &lt;55 分</span></div>
+    <div class="note">图钉颜色 = 地点类别<br>评分色 = 无障碍表现等级<br>点击图钉查看详情</div>
+  </aside>
+
+  <!-- 地图加载失败 -->
+  <div id="map-error">
+    <div class="err-card">
+      <h2>😥 地图加载失败</h2>
+      <p>1. 如果你在自己部署的站点(如 GitHub Pages)看到此提示,请先在腾讯位置服务开放平台申请 Key,替换 <code>index.html</code> 中的 <code>TMAP_KEY</code> 占位符,并为该 Key 配置域名白名单。<br>2. 请检查网络能否访问 map.qq.com。<br>3. 详细步骤见项目 README.md。</p>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
