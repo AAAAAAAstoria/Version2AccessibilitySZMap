@@ -240,6 +240,8 @@ html, body {
   overflow: hidden;
   font-size: 13px;
   position: relative;
+  pointer-events: auto;
+  z-index: 2001;
 }
 .iw-close {
   position: absolute;
