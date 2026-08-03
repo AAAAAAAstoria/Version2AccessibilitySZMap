@@ -349,31 +349,19 @@
       clearBtn.style.display = 'block';
       focusLocation(loc, 15);
     }
-
-    // 处理移动端卡片滑动与关闭
+    // 修复移动端滑动逻辑
     document.addEventListener('touchstart', function(e) {
       var iwBody = e.target.closest('.iw-body');
-      if (iwBody) {
-        e.stopPropagation(); 
-      }
+      if (iwBody) e.stopPropagation(); 
     }, { passive: true });
 
-    document.addEventListener('click', function(e) {
-      var closeBtn = e.target.closest('.iw-close');
-      if (closeBtn && infoWindow) {
-        infoWindow.close();
-      }
-    });
-  }
-
-
-    // 弹窗内按钮(事件代理)
+    // 统一处理弹窗点击(关闭与展开)
     document.addEventListener('click', function (e) {
       var actBtn = e.target.closest('[data-act]');
       if (!actBtn) return;
       var act = actBtn.dataset.act;
       if (act === 'close') {
-        infoWindow && infoWindow.close();
+        if (infoWindow) infoWindow.close();
       } else if (act === 'expand') {
         var block = actBtn.parentNode;
         block.querySelector('.rv-short').style.display = 'none';
