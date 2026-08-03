@@ -3,7 +3,7 @@
 基于无障碍环境建设实地测评数据构建的交互式地图网站,覆盖 **18 家医院 + 2 所大学 + 95 家酒店 + 5 个商场 + 10 个公园 + 9个博物馆 + 7个图书馆,共 146 个测评点**。
 地图直观呈现各点位分布,点击图钉即可查看该地点的无障碍情况、现场照片、真实评价与系统自动生成的「无障碍表现」评分。
 
-![类别](https://img.shields.io/badge/医院-18-e2554d) ![类别](https://img.shields.io/badge/大学-2-2f80ed) ![类别](https://img.shields.io/badge/酒店-95-9333ea) ![类别](https://img.shields.io/badge/商场-5-ea8a0c) ![类别](https://img.shields.io/badge/公园-10-16a34a) ![底图](https://img.shields.io/badge/底图-腾讯地图GL_JS-0f766e)
+![类别](https://img.shields.io/badge/医院-18-e2554d) ![类别](https://img.shields.io/badge/大学-2-2f80ed) ![类别](https://img.shields.io/badge/酒店-95-9333ea) ![类别](https://img.shields.io/badge/商场-5-ea8a0c) ![类别](https://img.shields.io/badge/公园-10-16a34a) [![类别](https://img.shields.io/badge/博物馆-7-6a0dad)](https://github.com/your-repo) [![类别](https://img.shields.io/badge/图书馆-12-f08030)](https://github.com/your-repo) ![底图](https://img.shields.io/badge/底图-腾讯地图GL_JS-0f766e)
 
 ---
 
