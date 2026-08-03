@@ -341,7 +341,7 @@
       if (!e.target.closest('.search-card')) results.classList.remove('show');
     });
 
-    function selectResult(id) {
+        function selectResult(id) {
       var loc = window.LOCATIONS.find(function (l) { return l.id === id; });
       if (!loc) return;
       results.classList.remove('show');
@@ -349,6 +349,23 @@
       clearBtn.style.display = 'block';
       focusLocation(loc, 15);
     }
+
+    // 处理移动端卡片滑动与关闭
+    document.addEventListener('touchstart', function(e) {
+      var iwBody = e.target.closest('.iw-body');
+      if (iwBody) {
+        e.stopPropagation(); 
+      }
+    }, { passive: true });
+
+    document.addEventListener('click', function(e) {
+      var closeBtn = e.target.closest('.iw-close');
+      if (closeBtn && infoWindow) {
+        infoWindow.close();
+      }
+    });
+  }
+
 
     // 弹窗内按钮(事件代理)
     document.addEventListener('click', function (e) {
